@@ -39,16 +39,16 @@ import java.util.stream.Collectors;
 public class PedidoJpaGateway implements PedidoGateway {
 
     @Value("${api.pagamento.url}")
-    private String pagamentoApiUrl;
+    String pagamentoApiUrl;
 
     @Value("${api.estoque.url}")
-    private String estoqueApiUrl;
+    String estoqueApiUrl;
 
     @Value("${api.cliente.url}")
-    private String clienteApiUrl;
+    String clienteApiUrl;
 
     @Value("${api.produto.url}")
-    private String produtoApiUrl;
+    String produtoApiUrl;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -109,7 +109,7 @@ public class PedidoJpaGateway implements PedidoGateway {
                 .build();
     }
 
-    private String processarPagamento(PedidoEntity pedido, PedidoJson pedidoJson) {
+    String processarPagamento(PedidoEntity pedido, PedidoJson pedidoJson) {
         try{
             if(pedido.getStatus().equals(StatusPedido.ABERTO.name())){
                 DadosPagamentoRequest pagamentoRequest = new DadosPagamentoRequest(
@@ -135,7 +135,7 @@ public class PedidoJpaGateway implements PedidoGateway {
 
 
 
-    private void processarEstoque(PedidoEntity pedido) {
+    void processarEstoque(PedidoEntity pedido) {
         List<EstoqueRequest> requests = new ArrayList<>();
 
         for (ItemPedidoEntity item : pedido.getItens()) {
@@ -171,7 +171,7 @@ public class PedidoJpaGateway implements PedidoGateway {
     }
 
 
-    private ClienteRequest buscarCliente(String clienteId) {
+    ClienteRequest buscarCliente(String clienteId) {
         try {
             ResponseEntity<ClienteRequest> response = restTemplate.getForEntity(
                     clienteApiUrl + "/cliente/" + clienteId,
@@ -189,7 +189,7 @@ public class PedidoJpaGateway implements PedidoGateway {
 
 
 
-    private BigDecimal pegaValorTotal(PedidoJson pedidoJson) {
+    BigDecimal pegaValorTotal(PedidoJson pedidoJson) {
         BigDecimal valorTotal = BigDecimal.ZERO;
 
         for (PedidoJson.ItemPedido item : pedidoJson.getItens()) {
